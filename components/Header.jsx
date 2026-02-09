@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Header() {
     
@@ -40,7 +41,9 @@ export default function Header() {
 
   return (
     <div className="md:mx-20 mx-4 md:h-30 h-20 bg-[#FFFFFF] flex items-center justify-between">
-      <img className="md:h-30 h-20" src="/images/logo.svg" alt="" />
+     <Link href="/">
+        <img className="md:h-30 h-20" src="/images/logo.svg" alt="" />
+     </Link>
 
       <div className="flex items-center md:gap-6 gap-4">
         <div className="hidden md:flex pl-4 pr-2.5 py-3.25 border-b border-[#827C6F]">
