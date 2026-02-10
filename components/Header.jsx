@@ -40,7 +40,7 @@ export default function Header() {
 
 
   return (
-    <div className="md:px-20 px-4 md:h-30 h-20 bg-[#FFFFFF] flex items-center justify-between">
+    <div className="fixed top-0 left-0 w-full z-50 md:px-20 px-4 md:h-30 h-20 bg-[#FFFFFF] flex items-center justify-between">
      <Link href="/">
         <img className="md:h-30 h-20" src="/images/logo.svg" alt="" />
      </Link>
