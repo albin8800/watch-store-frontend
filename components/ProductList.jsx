@@ -46,7 +46,11 @@ export default function ProductList() {
                   <div className="flex flex-col">
                 <img className="w-[177px] h-[177px] md:w-[302px] md:h-[302px]" src={product.image} alt="" />
                 <div className="flex justify-between mt-4">
-                    <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.category}</p>
+
+                    {product.categoryId && (
+                        <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.categoryId.name}</p>
+                    )}
+                    
                     <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.brand}</p>
                 </div>
 
@@ -84,13 +88,15 @@ export default function ProductList() {
         <div className="grid md:grid-cols-4 grid-cols-2 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-11">
             {widestProducts.map((product) => (
                 <Link
-                 key={product.id}
+                 key={product._id}
                  href="/watch"
                 >
                   <div className="flex flex-col">
                 <img className="w-[177px] h-[177px] md:w-[302px] md:h-[302px]" src={product.image} alt="" />
                 <div className="flex justify-between mt-4">
-                    <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.category}</p>
+                     {product.categoryId && (
+                        <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.categoryId.name}</p>
+                    )}
                     <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.brand}</p>
                 </div>
 
