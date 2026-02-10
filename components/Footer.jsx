@@ -35,7 +35,7 @@ export default function Footer() {
                     <div className="flex gap-2">
                         <img className="h-6 w-6" src="/icons/x.svg" alt="" />
                         <img className="h-6 w-6" src="/icons/facebook.svg" alt="" />
-                        <img className="h-6 w-6" src="/icons/youtube.svg" alt="" />
+                        <img className="h-6 w-6" src="/icons/Youtube.svg" alt="" />
                         <img className="h-6 w-6" src="/icons/instagram.svg" alt="" />
                     </div>
                 </div>
