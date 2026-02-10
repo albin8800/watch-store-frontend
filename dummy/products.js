@@ -4,7 +4,7 @@ export const products = [
         image: "/images/product1.svg",
         category: "Luxuary Watches",
         brand: "Rolex",
-        name: "Breitling Luxuary Unisex Quartz Dial - Free Size",
+        name: "Breitling Luxuary Unisex Quartz Dial Men - Free Size",
         price: 720000,
         mrp: 920000
     },
