@@ -13,7 +13,7 @@ export default function Categories() {
           <hr className="flex-1 border border-black" />
         </div>
 
-        <div className="grid md:grid-cols- grid-cols-4 gap-x-4 gap-y-6 md:gap-y-8">
+        <div className="grid md:grid-cols-6 grid-cols-4 gap-x-4 gap-y-6 md:gap-y-8">
           {categories.map((category) => (
             <Link
             key={category.name}
