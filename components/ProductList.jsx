@@ -1,7 +1,32 @@
+"use client";
+
 import { products } from "@/dummy/products";
+import api from "@/lib/axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function ProductList() {
+
+    const [popularProducts, setPopularProducts] = useState([]);
+    const [widestProducts, setWidestProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const popularRes = await api.get("/api/products?popular=true");
+                const wideRes = await api.get("/api/products?wide=true");
+
+                setPopularProducts(popularRes.data);
+                setWidestProducts(wideRes.data);
+            } catch (error) {
+                console.error("Failed to fetch products", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchProducts();
+    }, []);
     return (
         
       <div className="flex flex-col md:mx-20 mx-4 md:gap-12 gap-6">
@@ -13,13 +38,13 @@ export default function ProductList() {
         </div>
 
         <div className="grid md:grid-cols-4 grid-cols-2 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-11">
-            {products.map((product) => (
+            {popularProducts.map((product) => (
                 <Link
-                 key={product.id}
-                 href="/watch"
+                 key={product._id}
+                 href={`/watch/${product._id}`}
                 >
                   <div className="flex flex-col">
-                <img src={product.image} alt="" />
+                <img className="w-[177px] h-[177px] md:w-[302px] md:h-[302px]" src={product.image} alt="" />
                 <div className="flex justify-between mt-4">
                     <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.category}</p>
                     <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.brand}</p>
@@ -57,13 +82,13 @@ export default function ProductList() {
         </div>
 
         <div className="grid md:grid-cols-4 grid-cols-2 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-11">
-            {products.map((product) => (
+            {widestProducts.map((product) => (
                 <Link
                  key={product.id}
                  href="/watch"
                 >
                   <div className="flex flex-col">
-                <img src={product.image} alt="" />
+                <img className="w-[177px] h-[177px] md:w-[302px] md:h-[302px]" src={product.image} alt="" />
                 <div className="flex justify-between mt-4">
                     <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.category}</p>
                     <p className="md:text-[14px] text-[10px] text-[#827C6F]">{product.brand}</p>
