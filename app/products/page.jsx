@@ -1,16 +1,13 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import api from "@/lib/axios";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
-export default function ProductsPage() {
+export default function ProductsPage({ searchParams }) {
 
-  const searchParams = useSearchParams();
-  const categoryId = searchParams.get("category");
+  const params = use(searchParams);
+  const categoryId = params?.category || null;
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
