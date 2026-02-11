@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function productsPage() {
+export default function ProductsPage() {
 
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("category");
