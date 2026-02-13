@@ -42,7 +42,7 @@ export default function Categories() {
             href={`/products?category=${category._id}`}
             >
             <div className="flex flex-col items-center md:gap-4 gap-2">
-              <div className="flex bg-[#EAE7E0] md:p-2 p-6 items-center justify-center rounded-lg">
+              <div className="flex bg-[#EAE7E0] p-2 md:p-6 items-center justify-center rounded-lg">
                 <img className="h-[64px] w-[64px] md:h-[162px] md:w-[162px]" src={category.image} alt="" />
               </div>
               <p className="md:text-[16px] text-[10px] text-center">
