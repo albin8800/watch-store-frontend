@@ -17,8 +17,8 @@ export default function ProductList() {
                 const popularRes = await api.get("/api/products?popular=true");
                 const wideRes = await api.get("/api/products?wide=true");
 
-                setPopularProducts(popularRes.data);
-                setWidestProducts(wideRes.data);
+                setPopularProducts(popularRes.data.products);
+                setWidestProducts(wideRes.data.products);
             } catch (error) {
                 console.error("Failed to fetch products", error);
             } finally {

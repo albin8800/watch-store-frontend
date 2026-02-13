@@ -10,15 +10,18 @@ export default function ProductsPage({ searchParams }) {
   const categoryId = params?.category || null;
 
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const url = categoryId ? `/api/products?category=${categoryId}` : "/api/products";
+        const url = categoryId ? `/api/products?category=${categoryId}&page=${currentPage}&limit=8` : "/api/products?page=${currentPage}&limit=8";
 
         const res = await api.get(url);
-        setProducts(res.data);
+        setProducts(res.data.products);
+        setTotalPages(res.data.totalPages)
 
       } catch (error) {
         console.error("Error fetching products: ", error);
@@ -27,21 +30,55 @@ export default function ProductsPage({ searchParams }) {
       }
     }
     fetchProducts();
-  }, [categoryId])
+  }, [categoryId, currentPage])
+
+  const getPagination = () => {
+    const pages = [];
+
+    if(totalPages <= 7) {
+      return Array.from({ length: totalPages}, (_, i) => i + 1);
+    }
+    if(currentPage <= 4) {
+      return [1, 2, 3, 4, 5, "...", totalPages]
+    }
+
+    if(currentPage >= totalPages - 3) {
+      return [
+        1,
+        "...",
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ];
+    }
+    return [
+      1,
+      "...",
+      currentPage -1,
+      currentPage,
+      currentPage + 1,
+      "...",
+      totalPages,
+    ]
+  } 
 
   if(loading) return <p className="md:mt-48 mt-32 flex flex-col md:mx-20 mx-4 text-center w-full">Loading...</p>
   return (
 
-    <div className="md:mt-48 mt-32 flex flex-col md:mx-20 mx-4 md:gap-12 gap-6">
+    <div className="md:mt-48 mt-32 flex flex-col md:mx-20 mx-4 md:gap-12 gap-6 ">
       <div className="flex gap-6 items-center">
         {products.length > 0 && products[0].categoryId && (
-          <h1 className="md:text-[24px] text-[16px] text-black ">
+          <h1 className="md:text-[24px] text-[16px] text-black">
           {products[0].categoryId.name}
         </h1>
         )}
         
         <hr className="flex-1 border border-black" />
       </div>
+
+      <div>
 
       <div className="grid md:grid-cols-4 grid-cols-2 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-11">
         {products.map((product) => (
@@ -98,6 +135,39 @@ export default function ProductsPage({ searchParams }) {
           </Link>
         ))}
       </div>
+      </div>
+
+        <div className="flex items-center justify-center gap-1 md:gap-4 md:mt-10 mt:8">
+          <button onClick={() => setCurrentPage((prev) => Math.max(prev -1, 1))}
+          disabled={currentPage === 1}
+          className="flex px-[21px] py-[13px] hover:bg-[#F0ECE4] rounded-md items-center justify-center disabled:opacity-50">
+            <img className="w-[22px] h-[22px]" src="/icons/arrow-left.svg" alt="" />
+          </button>
+
+          {getPagination().map((page, index) =>
+          page === "..." ? (
+            <span key={index} className="px-[21px] py-[13px]">
+              ...
+            </span>
+          ) : (
+            <button key={index}
+            onClick={() => setCurrentPage(page)}
+            className={`px-[21px] py-[13px] rounded-md ${
+              currentPage === page ? "bg-[#F0ECE4] text-[#6F6859] text-[16px]" : "hover:bg-[#F0ECE4] text-[#827C6F] text-[16px]"
+            }`}
+            >
+              {page}
+            </button>
+          )
+          )}
+
+          <button onClick={() => setCurrentPage((prev) => Math.max(prev -1, 1))}
+          disabled={currentPage === 1}
+          className="flex px-[21px] py-[13px] hover:bg-[#F0ECE4] rounded-md items-center justify-center disabled:opacity-50">
+            <img className="w-[22px] h-[22px]" src="/icons/arrow-right.svg" alt="" />
+          </button>
+        </div>
+
     </div>
   );
 }
