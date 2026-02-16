@@ -1,6 +1,5 @@
 "use client";
 
-import { categories } from "@/dummy/categories";
 import api from "@/lib/axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,8 +12,8 @@ export default function Categories() {
   useEffect(()=> {
     const fetchCategories = async() => {
       try {
-        const res = await api.get("/api/categories");
-        setCategories(res.data)
+        const res = await api.get(`/api/categories?page=1&limit=100`);
+        setCategories(res.data.categories)
       } catch (error) {
         console.error("Error Fetching Categories", error);
       } finally {
