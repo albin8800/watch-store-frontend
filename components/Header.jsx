@@ -17,7 +17,7 @@ export default function Header() {
   const [products, setProducts] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
 
-  // Fetch products once
+  
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -31,7 +31,7 @@ export default function Header() {
     fetchProducts();
   }, []);
 
-  // Filter suggestions
+  
   useEffect(() => {
     if (!searchText.trim()) {
       setSuggestions([]);
@@ -45,7 +45,7 @@ export default function Header() {
     setSuggestions(filtered.slice(0, 5));
   }, [searchText, products]);
 
-  // Close dropdown on outside click
+ 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -101,7 +101,7 @@ export default function Header() {
       </Link>
 
       <div className="flex items-center md:gap-6 gap-4">
-        {/* Desktop Search */}
+       
         <div
           ref={dropdownRef}
           className="relative hidden md:flex pl-4 pr-2.5 py-3.25 border-b border-[#827C6F]"
@@ -145,7 +145,7 @@ export default function Header() {
           )}
         </div>
 
-        {/* Mobile Search Icon */}
+      
         {!isMobileSearchOpen && (
           <img
             onClick={() => setIsMobileSearchOpen(true)}
@@ -155,18 +155,47 @@ export default function Header() {
           />
         )}
 
-        {/* Account Dropdown */}
+        
         {!isMobileSearchOpen && (
-          <div className="relative group flex gap-0.5 cursor-pointer">
-            <img className="w-6 h-6" src="/icons/account.svg" alt="" />
-            <div className="hidden md:flex gap-0.5 items-end">
-              <p className="text-[16px] text-[#827C6F]">Login</p>
-              <img src="/icons/arrow-down.svg" alt="" />
-            </div>
-          </div>
-        )}
+  <div className="relative group flex gap-0.5 cursor-pointer">
+    <img className="w-6 h-6" src="/icons/account.svg" alt="" />
+    <div className="hidden md:flex gap-0.5 items-end">
+      <p className="text-[16px] text-[#827C6F]">Login</p>
+      <img src="/icons/arrow-down.svg" alt="" />
+    </div>
 
-        {/* Cart */}
+   
+    <div
+      className="absolute top-14 right-0 mt-3 w-[302px] bg-white shadow-lg 
+      opacity-0 invisible group-hover:opacity-100 group-hover:visible
+      transition-all duration-200 z-[60]"
+    >
+      <div className="flex flex-col px-2 py-2 gap-2">
+        <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
+          <img src="/icons/login.svg" alt="" />
+          <p className="text-[14px] text-[#827C6F]">Login</p>
+        </div>
+
+        <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
+          <img src="/icons/register.svg" alt="" />
+          <p className="text-[14px] text-[#827C6F]">Register</p>
+        </div>
+
+        <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
+          <img src="/icons/wishlist.svg" alt="" />
+          <p className="text-[14px] text-[#827C6F]">Wishlist</p>
+        </div>
+
+        <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
+          <img src="/icons/account-drop.svg" alt="" />
+          <p className="text-[14px] text-[#827C6F]">Account</p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+      
         {!isMobileSearchOpen && (
           <div className="flex gap-0.5 cursor-pointer">
             <img className="w-6 h-6" src="/icons/cart.svg" alt="" />
@@ -177,7 +206,7 @@ export default function Header() {
         )}
       </div>
 
-      {/* Mobile Search Input */}
+      
       {isMobileSearchOpen && (
         <div className="md:hidden mx-4 border-b border-[#827C6F] w-full">
           <div className="flex items-center gap-4 py-3">
