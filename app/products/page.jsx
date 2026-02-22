@@ -82,7 +82,7 @@ export default function ProductsPage({ searchParams }) {
 
       <div className="grid md:grid-cols-4 grid-cols-2 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-11">
         {products.map((product) => (
-          <Link key={product._id} href={`/watch/${product._id}`}>
+          <div key={product._id} href={`/watch/${product._id}`}>
             <div className="flex flex-col">
               <img
                 className="w-[177px] h-[177px] md:w-[302px] md:h-[302px]"
@@ -132,7 +132,7 @@ export default function ProductsPage({ searchParams }) {
                 </button>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
       </div>

@@ -1,57 +1,117 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import api from "@/lib/axios";
+
 
 export default function Header() {
-    
-    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-    const [searchText, setSearchText] = useState("");
-    const [isListening, setIsListening] = useState(false);
+  const router = useRouter();
+  const dropdownRef = useRef(null);
 
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [isListening, setIsListening] = useState(false);
 
-    const handleMicClick = () => {
-        if(!("webkitSpeechRecognition" in window)) {
-            alert("Voice Search is not supported in this browser");
-            return;
-        }
+  const [products, setProducts] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
 
-        const recognition = new (window).webkitSpeechRecognition();
+  // Fetch products once
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await api.get("/api/products");
+        setProducts(res.data.products);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Filter suggestions
+  useEffect(() => {
+    if (!searchText.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    setSuggestions(filtered.slice(0, 5));
+  }, [searchText, products]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setSuggestions([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      router.push(`/products?search=${searchText}`);
+      setIsMobileSearchOpen(false);
+      setSuggestions([]);
+    }
+  };
+
+  const handleMicClick = () => {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Voice Search is not supported in this browser");
+      return;
+    }
+
+    const recognition = new window.webkitSpeechRecognition();
 
     recognition.lang = "en-US";
     recognition.continuous = false;
     recognition.interimResults = false;
 
     recognition.onstart = () => {
-        setIsListening(true);
-
+      setIsListening(true);
     };
 
     recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setSearchText(transcript);
+      const transcript = event.results[0][0].transcript;
+      setSearchText(transcript);
     };
 
     recognition.onend = () => {
-        setIsListening(false);
-    }
-    recognition.start()
-    }
+      setIsListening(false);
+    };
 
+    recognition.start();
+  };
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 md:px-20 px-4 md:h-30 h-20 bg-[#FFFFFF] flex items-center justify-between">
-     <Link href="/">
+      <Link href="/">
         <img className="md:h-30 h-20" src="/images/logo.svg" alt="" />
-     </Link>
+      </Link>
 
       <div className="flex items-center md:gap-6 gap-4">
-        <div className="hidden md:flex pl-4 pr-2.5 py-3.25 border-b border-[#827C6F]">
-          <div className="flex items-center gap-8">
+        {/* Desktop Search */}
+        <div
+          ref={dropdownRef}
+          className="relative hidden md:flex pl-4 pr-2.5 py-3.25 border-b border-[#827C6F]"
+        >
+          <div className="flex items-center gap-8 w-full">
             <input
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search for Watches by Names, Brands, Categories... "
+              onKeyDown={handleSearch}
+              placeholder="Search for Watches by Names, Brands, Categories..."
               type="text"
               className="text-[14px] w-[395px] outline-0 text-[#827C6F]"
             />
@@ -65,8 +125,27 @@ export default function Header() {
               <img className="h-5 w-5" src="/icons/mic.svg" alt="mic" />
             </div>
           </div>
+
+          {suggestions.length > 0 && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg border mt-2 z-50">
+              {suggestions.map((product) => (
+                <div
+                  key={product._id}
+                  onClick={() => {
+                    router.push(`/product/${product._id}`);
+                    setSearchText("");
+                    setSuggestions([]);
+                  }}
+                  className="px-4 py-3 cursor-pointer hover:bg-[#F0ECE4] text-sm text-[#827C6F]"
+                >
+                  {product.name}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
+        {/* Mobile Search Icon */}
         {!isMobileSearchOpen && (
           <img
             onClick={() => setIsMobileSearchOpen(true)}
@@ -76,6 +155,7 @@ export default function Header() {
           />
         )}
 
+        {/* Account Dropdown */}
         {!isMobileSearchOpen && (
           <div className="relative group flex gap-0.5 cursor-pointer">
             <img className="w-6 h-6" src="/icons/account.svg" alt="" />
@@ -83,37 +163,10 @@ export default function Header() {
               <p className="text-[16px] text-[#827C6F]">Login</p>
               <img src="/icons/arrow-down.svg" alt="" />
             </div>
-            <div
-              className="absolute top-15 right-0 mt-3 w-[302px] bg-white shadow-lg 
-                  opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                  transition-all duration-200 z-50"
-            >
-              <div className="flex flex-col px-2 py-2 gap-2">
-                <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
-                    <img src="/icons/login.svg" alt="" />
-                    <p className="text-[14px] text-[#827C6F]">Login</p>
-                </div>
-                
-                <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
-                    <img src="/icons/register.svg" alt="" />
-                    <p className="text-[14px] text-[#827C6F]">Register</p>
-                </div>
-
-                <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
-                    <img src="/icons/wishlist.svg" alt="" />
-                    <p className="text-[14px] text-[#827C6F]">Wishlist</p>
-                </div>
-                
-                <div className="flex gap-1 px-4 py-2 hover:bg-[#F0ECE4]">
-                    <img src="/icons/account-drop.svg" alt="" />
-                    <p className="text-[14px] text-[#827C6F]">Account</p>
-                </div>
-                
-              </div>
-            </div>
           </div>
         )}
 
+        {/* Cart */}
         {!isMobileSearchOpen && (
           <div className="flex gap-0.5 cursor-pointer">
             <img className="w-6 h-6" src="/icons/cart.svg" alt="" />
@@ -124,14 +177,16 @@ export default function Header() {
         )}
       </div>
 
+      {/* Mobile Search Input */}
       {isMobileSearchOpen && (
-        <div className="md:hidden mx-4 border-b border-[#827C6F]">
+        <div className="md:hidden mx-4 border-b border-[#827C6F] w-full">
           <div className="flex items-center gap-4 py-3">
             <input
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               autoFocus
-              placeholder="Search for Watches by Names, Brands, Categories..."
+              onKeyDown={handleSearch}
+              placeholder="Search for Watches..."
               type="text"
               className="text-[14px] w-full outline-0 text-[#827C6F]"
             />

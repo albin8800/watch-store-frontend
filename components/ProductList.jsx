@@ -39,7 +39,7 @@ export default function ProductList() {
 
         <div className="grid md:grid-cols-4 grid-cols-2 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-11">
             {popularProducts.map((product) => (
-                <Link
+                <div
                  key={product._id}
                  href={`/watch/${product._id}`}
                 >
@@ -73,7 +73,7 @@ export default function ProductList() {
                     </button>
                 </div>
             </div>
-                </Link>
+                </div>
                 
             ))}
             
@@ -87,7 +87,7 @@ export default function ProductList() {
 
         <div className="grid md:grid-cols-4 grid-cols-2 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-11">
             {widestProducts.map((product) => (
-                <Link
+                <div
                  key={product._id}
                  href="/watch"
                 >
@@ -119,7 +119,7 @@ export default function ProductList() {
                     </button>
                 </div>
             </div>
-                </Link>
+                </div>
                 
             ))}
             
